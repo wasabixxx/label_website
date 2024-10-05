@@ -64,7 +64,7 @@ if (isset($_GET['slug'])) {
     <link rel="stylesheet" href="css/btn.css">
     <link rel="shortcut icon" href="img/logo.ico" type="image/x-icon">
 </head>
-<body style="background-image: url('<?php echo $uploads_path . htmlspecialchars($image); ?>'); background-size: cover; background-position: center; backdrop-filter: blur(5px);">
+<body style="background-image: url('<?php echo $uploads_path . htmlspecialchars($image); ?>');">
     <div id="header">
         <h3>BROTHERS STILL ALIVE</h3>
     </div>
