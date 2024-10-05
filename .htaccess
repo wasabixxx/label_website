@@ -1,2 +1,6 @@
 RewriteEngine On
-RewriteRule ^([a-zA-Z0-9_-]+)$ page.php?slug=$1 [L]
+
+# Chỉ chuyển hướng nếu không phải là các tệp hoặc thư mục cụ thể
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)$ index.php?slug=$1 [L,QSA]

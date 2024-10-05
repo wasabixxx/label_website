@@ -1,34 +1,9 @@
 <?php
-
 // Include file kết nối cơ sở dữ liệu
 include 'connect_db.php';
 
-// Kiểm tra xem có slug được truyền vào không
-if (isset($_GET['slug'])) {
-    $slug = $_GET['slug'];
-
-    // Truy vấn dữ liệu từ bảng songs dựa trên slug
-    $stmt = $conn->prepare("SELECT * FROM songs WHERE slug = ?");
-    $stmt->bind_param("s", $slug);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    // Nếu tìm thấy bài hát theo slug
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-    } else {
-        // Nếu không tìm thấy, hiển thị thông báo lỗi
-        echo "Không tìm thấy trang.";
-        exit; // Dừng việc thực thi nếu không tìm thấy
-    }
-} else {
-    // Nếu không có slug, bạn có thể hiển thị nội dung mặc định hoặc trang chủ
-    echo "Chào mừng đến với trang chủ!";
-    exit; // Dừng việc thực thi
-}
-
 // Truy vấn dữ liệu trang chủ từ cơ sở dữ liệu
-$sql = "SELECT * FROM homepage LIMIT 1";
+$sql = "SELECT * FROM songs LIMIT 1"; // Lấy một bản ghi mặc định
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
@@ -40,7 +15,7 @@ if ($result->num_rows > 0) {
     $soundcloud_link = $row['soundcloud_link'];
     $youtube_link = $row['youtube_link'];
     $instagram_link = $row['instagram_link'];
-    $image = $row['image'];
+    $image = $row['image']; // Ảnh cho trang chủ
 } else {
     echo "Chưa có dữ liệu trang chủ!";
     exit();
@@ -57,20 +32,19 @@ if ($result->num_rows > 0) {
     <link rel="stylesheet" href="css/btn.css">
     <link rel="shortcut icon" href="img/logo.ico" type="image/x-icon">
 </head>
-<body>
+<body style="background-image: url('uploads1/<?php echo htmlspecialchars($image); ?>'); background-size: cover; background-position: center; backdrop-filter: blur(5px);">
     <div id="header">
         <h3>BROTHERS STILL ALIVE</h3>
     </div>
 
     <div id="container">
         <!-- Hiển thị ảnh từ thư mục img -->
-        <div id="artistImage" class="background-image"></div>
         <img id="artistImage" src="img/<?php echo htmlspecialchars($image); ?>" alt="Artist Image">
 
         <!-- Hiển thị tiêu đề bài hát -->
         <div id="songTitle"><?php echo htmlspecialchars($title); ?></div>
 
-        <!-- Hiển thị các liên kết mạng xã hội, bỏ qua liên kết nào không có -->
+        <!-- Hiển thị các liên kết mạng xã hội -->
         <div id="platformLinks">
             <?php if (!empty($spotify_link)): ?>
                 <a href="<?php echo htmlspecialchars($spotify_link); ?>" target="_blank" class="bttn-jelly bttn-md bttn-default">Spotify</a>
