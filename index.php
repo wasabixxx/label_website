@@ -1,24 +1,50 @@
 <?php
-// Include file kết nối cơ sở dữ liệu
+session_start();
 include 'connect_db.php';
 
-// Truy vấn dữ liệu trang chủ từ cơ sở dữ liệu
-$sql = "SELECT * FROM songs LIMIT 1"; // Lấy một bản ghi mặc định
-$result = $conn->query($sql);
+// Kiểm tra slug trong URL
+if (isset($_GET['slug'])) {
+    $slug = $_GET['slug'];
 
-if ($result->num_rows > 0) {
-    // Lấy dữ liệu từ bản ghi
-    $row = $result->fetch_assoc();
-    $title = $row['title'];
-    $spotify_link = $row['spotify_link'];
-    $apple_link = $row['apple_link'];
-    $soundcloud_link = $row['soundcloud_link'];
-    $youtube_link = $row['youtube_link'];
-    $instagram_link = $row['instagram_link'];
-    $image = $row['image']; // Ảnh cho trang chủ
+    // Truy vấn bài hát dựa trên slug
+    $sql = "SELECT * FROM songs WHERE slug = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $slug);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        // Lấy dữ liệu từ bản ghi
+        $row = $result->fetch_assoc();
+        $title = $row['title'];
+        $spotify_link = $row['spotify_link'];
+        $apple_link = $row['apple_link'];
+        $soundcloud_link = $row['soundcloud_link'];
+        $youtube_link = $row['youtube_link'];
+        $instagram_link = $row['instagram_link'];
+        $image = $row['image'];
+    } else {
+        echo "Không tìm thấy bài hát!";
+        exit();
+    }
 } else {
-    echo "Chưa có dữ liệu trang chủ!";
-    exit();
+    // Nếu không có slug, lấy dữ liệu mặc định
+    $sql = "SELECT * FROM homepage LIMIT 1";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $title = $row['title'];
+        $spotify_link = $row['spotify_link'];
+        $apple_link = $row['apple_link'];
+        $soundcloud_link = $row['soundcloud_link'];
+        $youtube_link = $row['youtube_link'];
+        $instagram_link = $row['instagram_link'];
+        $image = $row['image'];
+    } else {
+        echo "Chưa có dữ liệu trang chủ!";
+        exit();
+    }
 }
 ?>
 
@@ -27,7 +53,7 @@ if ($result->num_rows > 0) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $title; ?> - Brothers Still Alive</title>
+    <title><?php echo htmlspecialchars($title); ?> - Brothers Still Alive</title>
     <link rel="stylesheet" href="css/style.css?v=<?php echo time(); ?>">
     <link rel="stylesheet" href="css/btn.css">
     <link rel="shortcut icon" href="img/logo.ico" type="image/x-icon">
@@ -38,13 +64,8 @@ if ($result->num_rows > 0) {
     </div>
 
     <div id="container">
-        <!-- Hiển thị ảnh từ thư mục img -->
         <img id="artistImage" src="img/<?php echo htmlspecialchars($image); ?>" alt="Artist Image">
-
-        <!-- Hiển thị tiêu đề bài hát -->
         <div id="songTitle"><?php echo htmlspecialchars($title); ?></div>
-
-        <!-- Hiển thị các liên kết mạng xã hội -->
         <div id="platformLinks">
             <?php if (!empty($spotify_link)): ?>
                 <a href="<?php echo htmlspecialchars($spotify_link); ?>" target="_blank" class="bttn-jelly bttn-md bttn-default">Spotify</a>
