@@ -23,6 +23,9 @@ if (isset($_GET['slug'])) {
         $youtube_link = $row['youtube_link'];
         $instagram_link = $row['instagram_link'];
         $image = $row['image'];
+        
+        // Đặt đường dẫn cho uploads
+        $uploads_path = 'uploads/'; // Sử dụng uploads cho slug
     } else {
         echo "Không tìm thấy bài hát!";
         exit();
@@ -41,6 +44,9 @@ if (isset($_GET['slug'])) {
         $youtube_link = $row['youtube_link'];
         $instagram_link = $row['instagram_link'];
         $image = $row['image'];
+
+        // Đặt đường dẫn cho uploads1
+        $uploads_path = 'uploads1/'; // Sử dụng uploads1 cho không có slug
     } else {
         echo "Chưa có dữ liệu trang chủ!";
         exit();
@@ -58,13 +64,13 @@ if (isset($_GET['slug'])) {
     <link rel="stylesheet" href="css/btn.css">
     <link rel="shortcut icon" href="img/logo.ico" type="image/x-icon">
 </head>
-<body style="background-image: url('uploads1/<?php echo htmlspecialchars($image); ?>'); background-size: cover; background-position: center; backdrop-filter: blur(5px);">
+<body style="background-image: url('<?php echo $uploads_path . htmlspecialchars($image); ?>'); background-size: cover; background-position: center; backdrop-filter: blur(5px);">
     <div id="header">
         <h3>BROTHERS STILL ALIVE</h3>
     </div>
 
     <div id="container">
-        <img id="artistImage" src="img/<?php echo htmlspecialchars($image); ?>" alt="Artist Image">
+        <img id="artistImage" src="<?php echo $uploads_path . htmlspecialchars($image); ?>" alt="Artist Image">
         <div id="songTitle"><?php echo htmlspecialchars($title); ?></div>
         <div id="platformLinks">
             <?php if (!empty($spotify_link)): ?>
