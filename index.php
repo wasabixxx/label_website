@@ -1,6 +1,6 @@
 <?php
 session_start();
-include 'connect_db.php';
+include 'admin/connect_db.php';
 
 // Kiểm tra slug trong URL
 if (isset($_GET['slug'])) {
@@ -25,7 +25,7 @@ if (isset($_GET['slug'])) {
         $image = $row['image'];
         
         // Đặt đường dẫn cho uploads
-        $uploads_path = 'uploads/'; // Sử dụng uploads cho slug
+        $uploads_path = 'admin/uploads/'; // Sử dụng uploads cho slug
     } else {
         echo "Không tìm thấy bài hát!";
         exit();
@@ -46,7 +46,7 @@ if (isset($_GET['slug'])) {
         $image = $row['image'];
 
         // Đặt đường dẫn cho uploads1
-        $uploads_path = 'uploads1/'; // Sử dụng uploads1 cho không có slug
+        $uploads_path = 'admin/uploads1/'; // Sử dụng uploads1 cho không có slug
     } else {
         echo "Chưa có dữ liệu trang chủ!";
         exit();
