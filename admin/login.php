@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 setcookie('username', $username, time() + (86400 * 30), "/"); // Cookie sẽ tồn tại trong 30 ngày
             }
 
-            header("Location: admin.php");
+            header("Location: index.php");
             exit();
         } else {
             echo "Tên đăng nhập hoặc mật khẩu không đúng!";

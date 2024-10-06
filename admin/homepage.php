@@ -13,6 +13,32 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
+// Lưu phiên bản hiện tại của homepage vào bảng homepage_versions
+function saveCurrentHomepageVersion($conn) {
+    // Lấy thông tin hiện tại của homepage
+    $sql = "SELECT * FROM homepage WHERE id = 1";
+    $result = $conn->query($sql);
+    $current_homepage = $result->fetch_assoc();
+
+    // Chèn phiên bản hiện tại vào bảng homepage_versions
+    $sql = "INSERT INTO homepage_versions 
+        (homepage_id, title, spotify_link, apple_link, soundcloud_link, youtube_link, instagram_link, image) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("isssssss", 
+        $current_homepage['id'], 
+        $current_homepage['title'], 
+        $current_homepage['spotify_link'], 
+        $current_homepage['apple_link'], 
+        $current_homepage['soundcloud_link'], 
+        $current_homepage['youtube_link'], 
+        $current_homepage['instagram_link'], 
+        $current_homepage['image']
+    );
+    $stmt->execute();
+}
+
 // Lấy thông tin hiện tại của homepage
 $sql = "SELECT * FROM homepage WHERE id=1";
 $result = $conn->query($sql);
@@ -20,6 +46,9 @@ $current_homepage = $result->fetch_assoc();
 
 // Cập nhật trang chủ
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_homepage'])) {
+    // Lưu phiên bản hiện tại trước khi cập nhật
+    saveCurrentHomepageVersion($conn);
+    
     $home_title = $_POST['home_title'];
     $home_spotify = $_POST['home_spotify'];
     $home_apple = $_POST['home_apple'];
@@ -69,8 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_homepage'])) {
             echo "Lỗi: Chỉ hỗ trợ các định dạng jpg, jpeg, png, gif.";
         }
     } else {
-        // Nếu không có tệp nào được tải lên, có thể giữ nguyên giá trị cũ hoặc xử lý theo cách bạn muốn
-        // Cập nhật dữ liệu mà không thay đổi hình ảnh
+        // Nếu không có tệp nào được tải lên, cập nhật dữ liệu mà không thay đổi hình ảnh
         $sql = "UPDATE homepage SET 
                     title=?, 
                     spotify_link=?, 
@@ -91,6 +119,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_homepage'])) {
         }
     }
 }
+
+// Xử lý việc phục hồi một phiên bản cũ
+if (isset($_GET['version_id'])) {
+    $version_id = $_GET['version_id'];
+    
+    // Lấy thông tin phiên bản đã chọn
+    $sql = "SELECT * FROM homepage_versions WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $version_id);
+    $stmt->execute();
+    $version = $stmt->get_result()->fetch_assoc();
+    
+    // Khôi phục phiên bản về bảng homepage
+    $sql = "UPDATE homepage SET title=?, spotify_link=?, apple_link=?, soundcloud_link=?, youtube_link=?, instagram_link=?, image=? WHERE id = 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssssss", 
+        $version['title'], 
+        $version['spotify_link'], 
+        $version['apple_link'], 
+        $version['soundcloud_link'], 
+        $version['youtube_link'], 
+        $version['instagram_link'], 
+        $version['image']
+    );
+    if ($stmt->execute()) {
+        echo "Đã khôi phục phiên bản từ " . $version['version_date'];
+    }
+}
+
+// Xử lý xóa các phiên bản đã chọn
+if (isset($_POST['delete_versions'])) {
+    if (!empty($_POST['version_ids'])) {
+        foreach ($_POST['version_ids'] as $id) {
+            $sql = "DELETE FROM homepage_versions WHERE id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $id);
+            $stmt->execute();
+        }
+        echo "Đã xóa các phiên bản đã chọn.";
+    }
+}
+
+// Lấy danh sách phiên bản cũ của homepage
+$sql = "SELECT * FROM homepage_versions WHERE homepage_id = 1 ORDER BY version_date DESC";
+$result_versions = $conn->query($sql);
 ?>
 
 <!DOCTYPE html>
@@ -133,6 +206,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_homepage'])) {
             
             <input type="submit" name="update_homepage" value="Cập nhật trang chủ">
         </form>
+
+        <h2>Phiên bản hiện tại</h2>
+        <div id="current-version">
+            <h3>Phiên bản hiện tại</h3>
+            <p><strong>Tiêu đề:</strong> <?php echo htmlspecialchars($current_homepage['title']); ?></p>
+            <p><strong>Spotify:</strong> <?php echo htmlspecialchars($current_homepage['spotify_link']); ?></p>
+            <p><strong>Apple Music:</strong> <?php echo htmlspecialchars($current_homepage['apple_link']); ?></p>
+            <p><strong>SoundCloud:</strong> <?php echo htmlspecialchars($current_homepage['soundcloud_link']); ?></p>
+            <p><strong>YouTube Music:</strong> <?php echo htmlspecialchars($current_homepage['youtube_link']); ?></p>
+            <p><strong>Instagram:</strong> <?php echo htmlspecialchars($current_homepage['instagram_link']); ?></p>
+            <img src="uploads1/<?php echo htmlspecialchars($current_homepage['image']); ?>" alt="Hình ảnh hiện tại" style="max-width: 300px;"><br>
+        </div>
+
+        <h2>Phiên bản trước đó</h2>
+        <form action="homepage.php" method="post">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Chọn</th>
+                        <th>Ngày phiên bản</th>
+                        <th>Tiêu đề</th>
+                        <th>Spotify</th>
+                        <th>Apple Music</th>
+                        <th>SoundCloud</th>
+                        <th>YouTube Music</th>
+                        <th>Instagram</th>
+                        <th>Hình ảnh</th>
+                        <th>Khôi phục</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($row = $result_versions->fetch_assoc()) { ?>
+                        <tr>
+                            <td><input type="checkbox" name="version_ids[]" value="<?php echo $row['id']; ?>"></td>
+                            <td><?php echo $row['version_date']; ?></td>
+                            <td><?php echo htmlspecialchars($row['title']); ?></td>
+                            <td><?php echo htmlspecialchars($row['spotify_link']); ?></td>
+                            <td><?php echo htmlspecialchars($row['apple_link']); ?></td>
+                            <td><?php echo htmlspecialchars($row['soundcloud_link']); ?></td>
+                            <td><?php echo htmlspecialchars($row['youtube_link']); ?></td>
+                            <td><?php echo htmlspecialchars($row['instagram_link']); ?></td>
+                            <td><img src="uploads1/<?php echo htmlspecialchars($row['image']); ?>" alt="Hình ảnh phiên bản cũ" style="max-width: 100px;"></td>
+                            <td><a href="homepage.php?version_id=<?php echo $row['id']; ?>">Khôi phục phiên bản này</a></td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+            <input type="submit" name="delete_versions" value="Xóa các phiên bản đã chọn">
+        </form>
     </div>
+
+    <!-- <script>
+    setTimeout(function() {
+        window.location.href = "homepage.php?rand=" + new Date().getTime();
+    }, 5000); // Thay đổi số 5000 để điều chỉnh khoảng thời gian tự động làm mới (5000ms = 5 giây)
+</script> -->
 </body>
 </html>

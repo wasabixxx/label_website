@@ -13,16 +13,34 @@ if (!isset($_SESSION['username'])) {
     exit();
 }
 
-// Xóa bài hát
+// Xóa bài hát và xóa ảnh tương ứng
 if (isset($_POST['delete_songs'])) {
     if (isset($_POST['selected_songs'])) {
         foreach ($_POST['selected_songs'] as $id) {
+            // Lấy tên file ảnh từ database
+            $sql_image = "SELECT image FROM songs WHERE id = ?";
+            $stmt_image = $conn->prepare($sql_image);
+            $stmt_image->bind_param("i", $id);
+            $stmt_image->execute();
+            $result_image = $stmt_image->get_result();
+            
+            if ($result_image->num_rows > 0) {
+                $row = $result_image->fetch_assoc();
+                $image_path = 'uploads/' . $row['image'];
+                
+                // Xóa ảnh khỏi thư mục nếu tồn tại
+                if (file_exists($image_path)) {
+                    unlink($image_path);
+                }
+            }
+
+            // Xóa bài hát khỏi cơ sở dữ liệu
             $sql = "DELETE FROM songs WHERE id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("i", $id);
             $stmt->execute();
         }
-        echo "Các bài hát đã được xóa!";
+        echo "Các bài hát và ảnh tương ứng đã được xóa!";
     }
 }
 

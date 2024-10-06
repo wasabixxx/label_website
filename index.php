@@ -91,7 +91,7 @@ if (isset($_GET['slug'])) {
         </div>
     </div>
 
-    <footer class="container">
+    <footer>
         <div>
             Copyright &copy; <script>document.write(new Date().getFullYear())</script> 
             <a href="https://www.facebook.com/BSAdagang" target="_blank">Brothers Still Alive</a>
