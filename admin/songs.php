@@ -106,50 +106,11 @@ $result = $conn->query($sql);
 </head>
 <body>
     <div id="header">
-        <h3>Xin chào, <?php echo htmlspecialchars($_SESSION['username']); ?></h3>
-        <a href="logout.php">Đăng xuất</a>
+
     </div>
 
     <div id="container">
-        <h2>Danh sách bài hát</h2>
-
-        <form action="songs.php" method="post">
-            <table>
-                <thead>
-                    <tr>
-                        <th><input type="checkbox" id="select_all"></th>
-                        <th>Tiêu đề</th>
-                        <th>Spotify</th>
-                        <th>Apple Music</th>
-                        <th>SoundCloud</th>
-                        <th>YouTube Music</th>
-                        <th>Instagram</th>
-                        <th>Hình ảnh</th>
-                        <th>Slug</th>
-                        <th>Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($song = $result->fetch_assoc()) { ?>
-                        <tr>
-                            <td><input type="checkbox" name="selected_songs[]" value="<?php echo $song['id']; ?>"></td>
-                            <td><?php echo htmlspecialchars($song['title']); ?></td>
-                            <td><?php echo htmlspecialchars($song['spotify_link']); ?></td>
-                            <td><?php echo htmlspecialchars($song['apple_link']); ?></td>
-                            <td><?php echo htmlspecialchars($song['soundcloud_link']); ?></td>
-                            <td><?php echo htmlspecialchars($song['youtube_link']); ?></td>
-                            <td><?php echo htmlspecialchars($song['instagram_link']); ?></td>
-                            <td><img src="uploads/<?php echo htmlspecialchars($song['image']); ?>" alt="Hình ảnh bài hát" style="width: 50px; height: auto;"></td>
-                            <td><?php echo htmlspecialchars($song['slug']); ?></td>
-                            <td>
-                                <a href="fix.php?id=<?php echo $song['id']; ?>">Sửa</a>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
-            <input type="submit" name="delete_songs" value="Xóa các bài hát đã chọn">
-        </form>
+        
 
         <h2>Thêm trang nhạc mới</h2>
         <form action="songs.php" method="post" enctype="multipart/form-data">
@@ -182,6 +143,50 @@ $result = $conn->query($sql);
         </form>
     </div>
 
+
+    <h2>Danh sách bài hát</h2>
+
+        <form action="songs.php" method="post">
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="select_all"></th>
+                        <th>Tiêu đề</th>
+                        <th>Spotify</th>
+                        <th>Apple Music</th>
+                        <th>SoundCloud</th>
+                        <th>YouTube Music</th>
+                        <th>Instagram</th>
+                        <th>Hình ảnh</th>
+                        <th>Slug</th>
+                        <th>Link đã gen</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($song = $result->fetch_assoc()) { ?>
+                        <tr>
+                            <td><input type="checkbox" name="selected_songs[]" value="<?php echo $song['id']; ?>"></td>
+                            <td><?php echo htmlspecialchars($song['title']); ?></td>
+                            <td><?php echo htmlspecialchars($song['spotify_link']); ?></td>
+                            <td><?php echo htmlspecialchars($song['apple_link']); ?></td>
+                            <td><?php echo htmlspecialchars($song['soundcloud_link']); ?></td>
+                            <td><?php echo htmlspecialchars($song['youtube_link']); ?></td>
+                            <td><?php echo htmlspecialchars($song['instagram_link']); ?></td>
+                            <td><img src="uploads/<?php echo htmlspecialchars($song['image']); ?>" alt="Hình ảnh bài hát" style="width: 50px; height: auto;"></td>
+                            <td><?php echo htmlspecialchars($song['slug']); ?></td>
+                            <td>
+                                <a href="../<?php echo htmlspecialchars($song['slug']); ?>" target="_blank">Xem trang</a>
+                            </td>
+                            <td>
+                                <a href="fix.php?id=<?php echo $song['id']; ?>">Sửa</a>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+            <input type="submit" name="delete_songs" value="Xóa các bài hát đã chọn">
+        </form>
     <script>
         // Chọn/ bỏ chọn tất cả các checkbox
         document.getElementById('select_all').onclick = function() {

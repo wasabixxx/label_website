@@ -174,10 +174,8 @@ $result_versions = $conn->query($sql);
     <title>Cập nhật trang chủ</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
     <div id="header">
-        <h3>Xin chào, <?php echo htmlspecialchars($_SESSION['username']); ?></h3>
-        <a href="logout.php">Đăng xuất</a>
+
     </div>
 
     <div id="container">
@@ -207,15 +205,8 @@ $result_versions = $conn->query($sql);
             <input type="submit" name="update_homepage" value="Cập nhật trang chủ">
         </form>
 
-        <h2>Phiên bản hiện tại</h2>
+        <h2>Ảnh trang chủ hiện tại</h2>
         <div id="current-version">
-            <h3>Phiên bản hiện tại</h3>
-            <p><strong>Tiêu đề:</strong> <?php echo htmlspecialchars($current_homepage['title']); ?></p>
-            <p><strong>Spotify:</strong> <?php echo htmlspecialchars($current_homepage['spotify_link']); ?></p>
-            <p><strong>Apple Music:</strong> <?php echo htmlspecialchars($current_homepage['apple_link']); ?></p>
-            <p><strong>SoundCloud:</strong> <?php echo htmlspecialchars($current_homepage['soundcloud_link']); ?></p>
-            <p><strong>YouTube Music:</strong> <?php echo htmlspecialchars($current_homepage['youtube_link']); ?></p>
-            <p><strong>Instagram:</strong> <?php echo htmlspecialchars($current_homepage['instagram_link']); ?></p>
             <img src="uploads1/<?php echo htmlspecialchars($current_homepage['image']); ?>" alt="Hình ảnh hiện tại" style="max-width: 300px;"><br>
         </div>
 
@@ -257,10 +248,34 @@ $result_versions = $conn->query($sql);
         </form>
     </div>
 
-    <!-- <script>
-    setTimeout(function() {
-        window.location.href = "homepage.php?rand=" + new Date().getTime();
-    }, 5000); // Thay đổi số 5000 để điều chỉnh khoảng thời gian tự động làm mới (5000ms = 5 giây)
-</script> -->
+      <!-- Đoạn script AJAX kiểm tra và cập nhật -->
+      <script>
+    function checkForUpdates() {
+        setInterval(function () {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "check_homepage_update.php", true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var response = JSON.parse(xhr.responseText);
+
+                    // Cập nhật nội dung nếu có thay đổi
+                    document.querySelector('input[name="home_title"]').value = response.title;
+                    document.querySelector('input[name="home_spotify"]').value = response.spotify_link;
+                    document.querySelector('input[name="home_apple"]').value = response.apple_link;
+                    document.querySelector('input[name="home_soundcloud"]').value = response.soundcloud_link;
+                    document.querySelector('input[name="home_youtube"]').value = response.youtube_link;
+                    document.querySelector('input[name="home_instagram"]').value = response.instagram_link;
+                    
+                    // Cập nhật hình ảnh
+                    document.getElementById("current-version").innerHTML = `<img src="uploads1/${response.image}" alt="Hình ảnh hiện tại" style="max-width: 300px;">`;
+                }
+            };
+            xhr.send();
+        }, 100); // Kiểm tra mỗi 5 giây (5000ms)
+    }
+
+    // Gọi hàm khi trang đã load
+    window.onload = checkForUpdates;
+    </script>
 </body>
 </html>

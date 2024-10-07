@@ -1,6 +1,19 @@
 <?php
 include 'connect_db.php'; // Kết nối đến cơ sở dữ liệu
 
+// Kiểm tra nếu có cookie tồn tại
+if (isset($_COOKIE['username'])) {
+    $_SESSION['username'] = $_COOKIE['username']; // Đặt lại phiên từ cookie
+}
+
+// Kiểm tra đăng nhập
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+    exit();
+}
+
+
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
@@ -38,5 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         <input type="submit" value="Đăng Ký">
     </form>
+
+    <a href="../admin">Quay lại trang admin</a>
 </body>
 </html>
