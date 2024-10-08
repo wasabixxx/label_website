@@ -1,23 +1,33 @@
- /* Tạo một container với hai cột */
- #container {
-    display: flex;
-    height: 100vh; /* Chiều cao 100% */
-}
+        #header{
+            position: fixed;
+            max-height: 150px;
+            background-color: aquamarine;
+            bottom: 0cm;
+            left: 0;
+            right: 0;
+            background-color: #f1f1f1;
+            padding: 10px;
+            z-index: 1000;
+        }
 
-/* Cột trái - songs.php */
-#left-pane {
-    flex: 1;
-    border-right: 2px solid #ccc;
-}
-
-/* Cột phải - homepage.php */
-#right-pane {
-    flex: 1;
-}
-
-/* Đặt chiều cao cho iframe */
-iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-}
+        /* CSS để ẩn/hiện iframe và nút tắt
+        #action-selection {
+            margin-bottom: 150px;
+        }
+        #container {
+            display: none;
+           margin-bottom: 150px;
+           
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+        }
+        .close-btn {
+            display: none;
+            margin-top: 10px;
+        }
+        .action-buttons button {
+            margin-right: 10px;
+        } */

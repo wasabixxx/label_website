@@ -21,24 +21,7 @@ if (!isset($_SESSION['username'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang Admin</title>
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        /* CSS để ẩn/hiện iframe và nút tắt */
-        #container {
-            display: none;
-        }
-        iframe {
-            width: 100%;
-            height: 600px;
-            border: none;
-        }
-        .close-btn {
-            display: none;
-            margin-top: 10px;
-        }
-        .action-buttons button {
-            margin-right: 10px;
-        }
-    </style>
+    
 </head>
 <body>
 

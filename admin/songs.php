@@ -1,5 +1,5 @@
 <?php
-session_start();
+
 include 'connect_db.php';
 
 // Kiểm tra nếu có cookie tồn tại
