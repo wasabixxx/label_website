@@ -1,4 +1,5 @@
 <?php
+session_start();
 include 'connect_db.php';
 
 // Kiểm tra nếu có cookie tồn tại
@@ -197,7 +198,6 @@ $images = array_diff(scandir('uploads1'), array('..', '.'));
 <body>
     <div class="container mt-5">
                 <div class="d-flex justify-content-between">
-                     <h3>Xin chào, <?php echo htmlspecialchars($_SESSION['username']); ?></h3>
                     <div>
                         <a href="../admin" class="btn btn-danger">Quay về trang ADMIN</a>
                     </div>

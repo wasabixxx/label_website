@@ -12,6 +12,9 @@ if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit();
 }
+
+// Kiểm tra quyền của người dùng
+$isAdmin = isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
 ?>
 
 <!DOCTYPE html>
@@ -23,43 +26,56 @@ if (!isset($_SESSION['username'])) {
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .tab-content {
+        .content {
             margin-top: 20px;
+        }
+        .nav-link {
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Quản lý Admin</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link btn btn-danger text-white" href="logout.php">Đăng xuất</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
     <div class="container mt-5">
-        <div class="d-flex justify-content-between">
-            <h3>Xin chào, <?php echo htmlspecialchars($_SESSION['username']); ?></h3>
-            <div>
-                <a href="logout.php" class="btn btn-danger">Đăng xuất</a>
-                <a href="register.php" class="btn btn-success">Tạo thêm tài khoản quản lí</a>
-            </div>
+        <h3>Xin chào, <?php echo htmlspecialchars($_SESSION['username']); ?></h3>
+        <div class="mt-2">
+            <strong>Vai trò:</strong> <?php echo htmlspecialchars($_SESSION['role']); ?>
         </div>
 
-        <!-- Tab navigation -->
-        <ul class="nav nav-tabs mt-4" id="adminTab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="songs-tab" data-toggle="tab" href="#songs" role="tab" aria-controls="songs" aria-selected="true">Thêm trang nhạc mới</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="homepage-tab" data-toggle="tab" href="#homepage" role="tab" aria-controls="homepage" aria-selected="false">Chỉnh sửa trang chủ</a>
-            </li>
-        </ul>
-
-        <!-- Tab content -->
-        <div class="tab-content" id="adminTabContent">
-            <!-- Tab: Thêm trang nhạc mới -->
-            <div class="tab-pane fade show active" id="songs" role="tabpanel" aria-labelledby="songs-tab">
-                <?php include 'songs.php'; // Hiển thị nội dung từ file songs.php ?>
-            </div>
-
-            <!-- Tab: Chỉnh sửa trang chủ -->
-            <div class="tab-pane fade" id="homepage" role="tabpanel" aria-labelledby="homepage-tab">
-                <?php include 'homepage.php'; // Hiển thị nội dung từ file homepage.php ?>
-            </div>
+        <!-- Các lựa chọn -->
+        <div class="content mt-4">
+            <h4>Chọn một hành động:</h4>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <a href="songs.php" class="btn btn-primary btn-block">Thêm trang nhạc mới</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="homepage.php" class="btn btn-primary btn-block">Chỉnh sửa trang chủ</a>
+                </li>
+                <?php if ($isAdmin): ?>
+                    <li class="list-group-item">
+                        <a href="user.php" class="btn btn-primary btn-block">Quản lí người dùng</a>
+                    </li>
+                <?php else: ?>
+                    <li class="list-group-item">
+                        <span class="btn btn-secondary btn-block disabled" title="Bạn không có quyền truy cập">Quản lí người dùng</span>
+                    </li>
+                <?php endif; ?>
+            </ul>
         </div>
     </div>
 

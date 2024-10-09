@@ -16,10 +16,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // So sánh mật khẩu đã băm
         if (password_verify($password, $row['password'])) {
             $_SESSION['username'] = $username;
+            $_SESSION['role'] = $row['role']; // Lưu vai trò vào session
 
             // Thiết lập cookie để lưu phiên đăng nhập
             if (isset($_POST['remember'])) {
-                setcookie('username', $username, time() + (1000 * 60 *5), "/"); // Cookie sẽ tồn tại trong 30 ngày
+                setcookie('username', $username, time() + (86400 * 30), "/"); // Cookie sẽ tồn tại trong 30 ngày
             }
 
             header("Location: index.php");
