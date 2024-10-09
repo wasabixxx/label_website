@@ -134,7 +134,7 @@ if (isset($_GET['slug'])) {
             <?php if (!empty($instagram_link)): ?>
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center">
-                    <img src="https://storage.googleapis.com/a1aa/image/instagram-logo.png" class="w-6 h-6 mr-2 .bttn-pill.bttn-md" alt="Instagram logo">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" class="w-6 h-6 mr-2 .bttn-pill.bttn-md" alt="Instagram logo">
                     <span class="text-lg font-medium">Instagram</span>
                 </div>
                 <a href="<?php echo htmlspecialchars($instagram_link); ?>" class="bg-gray-200 text-gray-700 rounded-full px-4 py-1" target="_blank">View</a>
