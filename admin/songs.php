@@ -107,6 +107,12 @@ $result = $conn->query($sql);
 </head>
 <body>
     <div class="container mt-5">
+                 <div class="d-flex justify-content-between">
+                     <h3>Xin chào, <?php echo htmlspecialchars($_SESSION['username']); ?></h3>
+                    <div>
+                        <a href="../admin" class="btn btn-danger">Quay về trang ADMIN</a>
+                    </div>
+                </div>
         <h2 class="mb-4">Thêm trang nhạc mới</h2>
         <form action="songs.php" method="post" enctype="multipart/form-data">
             <input type="hidden" name="new_page" value="1">

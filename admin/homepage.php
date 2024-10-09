@@ -196,6 +196,12 @@ $images = array_diff(scandir('uploads1'), array('..', '.'));
 </head>
 <body>
     <div class="container mt-5">
+                <div class="d-flex justify-content-between">
+                     <h3>Xin chào, <?php echo htmlspecialchars($_SESSION['username']); ?></h3>
+                    <div>
+                        <a href="../admin" class="btn btn-danger">Quay về trang ADMIN</a>
+                    </div>
+                </div>
         <div class="row">
             <!-- Phần bên trái: Form cập nhật -->
             <div class="col-md-6">
