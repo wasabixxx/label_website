@@ -10,7 +10,7 @@
             z-index: 1000;
         }
 
-        /* CSS để ẩn/hiện iframe và nút tắt
+        /* CSS để ẩn/hiện iframe và nút tắt */
         #action-selection {
             margin-bottom: 150px;
         }
@@ -30,4 +30,4 @@
         }
         .action-buttons button {
             margin-right: 10px;
-        } */
+        }

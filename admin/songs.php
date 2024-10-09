@@ -1,5 +1,4 @@
 <?php
-
 include 'connect_db.php';
 
 // Kiểm tra nếu có cookie tồn tại
@@ -53,6 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['new_page'])) {
     $youtube_link = $_POST['youtube_link'];
     $instagram_link = $_POST['instagram_link'];
     $slug = $_POST['slug'];
+    $color = $_POST['color']; // Lấy giá trị màu từ ô nhập
 
     // Kiểm tra xem tệp hình ảnh có được tải lên hay không
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
@@ -68,12 +68,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['new_page'])) {
             // Di chuyển tệp đã tải lên vào thư mục chỉ định
             if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
                 // Thêm bản ghi vào database
-                $sql = "INSERT INTO songs (title, spotify_link, apple_link, soundcloud_link, youtube_link, instagram_link, image, slug)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                $sql = "INSERT INTO songs (title, spotify_link, apple_link, soundcloud_link, youtube_link, instagram_link, image, slug, color)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
                 // Sử dụng prepared statements để bảo mật
                 $stmt = $conn->prepare($sql);
-                $stmt->bind_param("ssssssss", $title, $spotify_link, $apple_link, $soundcloud_link, $youtube_link, $instagram_link, $image, $slug);
+                $stmt->bind_param("sssssssss", $title, $spotify_link, $apple_link, $soundcloud_link, $youtube_link, $instagram_link, $image, $slug, $color);
 
                 if ($stmt->execute()) {
                     echo "Trang nhạc mới đã được tạo!";
@@ -102,52 +102,56 @@ $result = $conn->query($sql);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Danh sách bài hát</title>
-    <link rel="stylesheet" href="style.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div id="header">
-
-    </div>
-
-    <div id="container">
-        
-
-        <h2>Thêm trang nhạc mới</h2>
+    <div class="container mt-5">
+        <h2 class="mb-4">Thêm trang nhạc mới</h2>
         <form action="songs.php" method="post" enctype="multipart/form-data">
             <input type="hidden" name="new_page" value="1">
-            <label for="title">Tiêu đề:</label><br>
-            <input type="text" name="title" required><br>
-            
-            <label for="spotify_link">Spotify:</label><br>
-            <input type="text" name="spotify_link"><br>
-            
-            <label for="apple_link">Apple Music:</label><br>
-            <input type="text" name="apple_link"><br>
-            
-            <label for="soundcloud_link">SoundCloud:</label><br>
-            <input type="text" name="soundcloud_link"><br>
-            
-            <label for="youtube_link">YouTube Music:</label><br>
-            <input type="text" name="youtube_link"><br>
-            
-            <label for="instagram_link">Instagram:</label><br>
-            <input type="text" name="instagram_link"><br>
-            
-            <label for="slug">Slug (URL hậu tố):</label><br>
-            <input type="text" name="slug" required><br>
-            
-            <label for="image">Chọn ảnh để tải lên:</label><br>
-            <input type="file" name="image" required><br>
-            
-            <input type="submit" value="Thêm trang nhạc">
+            <div class="form-group">
+                <label for="title">Tiêu đề:</label>
+                <input type="text" class="form-control" name="title" required>
+            </div>
+            <div class="form-group">
+                <label for="spotify_link">Spotify:</label>
+                <input type="text" class="form-control" name="spotify_link">
+            </div>
+            <div class="form-group">
+                <label for="apple_link">Apple Music:</label>
+                <input type="text" class="form-control" name="apple_link">
+            </div>
+            <div class="form-group">
+                <label for="soundcloud_link">SoundCloud:</label>
+                <input type="text" class="form-control" name="soundcloud_link">
+            </div>
+            <div class="form-group">
+                <label for="youtube_link">YouTube Music:</label>
+                <input type="text" class="form-control" name="youtube_link">
+            </div>
+            <div class="form-group">
+                <label for="instagram_link">Instagram:</label>
+                <input type="text" class="form-control" name="instagram_link">
+            </div>
+            <div class="form-group">
+                <label for="slug">Slug (URL hậu tố):</label>
+                <input type="text" class="form-control" name="slug" required>
+            </div>
+            <div class="form-group">
+                <label for="color">Màu sắc:</label>
+                <input type="color" class="form-control" name="color" value="#ff0000"> <!-- Trình chọn màu -->
+            </div>
+            <div class="form-group">
+                <label for="image">Chọn ảnh để tải lên:</label>
+                <input type="file" class="form-control-file" name="image" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Thêm trang nhạc</button>
         </form>
-    </div>
 
-
-    <h2>Danh sách bài hát</h2>
-
+        <h2 class="mt-5">Danh sách bài hát</h2>
         <form action="songs.php" method="post">
-            <table border="1">
+            <table class="table table-bordered">
                 <thead>
                     <tr>
                         <th><input type="checkbox" id="select_all"></th>
@@ -159,6 +163,7 @@ $result = $conn->query($sql);
                         <th>Instagram</th>
                         <th>Hình ảnh</th>
                         <th>Slug</th>
+                        <th>Màu sắc</th>
                         <th>Link đã gen</th>
                         <th>Thao tác</th>
                     </tr>
@@ -173,28 +178,33 @@ $result = $conn->query($sql);
                             <td><?php echo htmlspecialchars($song['soundcloud_link']); ?></td>
                             <td><?php echo htmlspecialchars($song['youtube_link']); ?></td>
                             <td><?php echo htmlspecialchars($song['instagram_link']); ?></td>
-                            <td><img src="uploads/<?php echo htmlspecialchars($song['image']); ?>" alt="Hình ảnh bài hát" style="width: 50px; height: auto;"></td>
+                            <td><img src="uploads/<?php echo htmlspecialchars($song['image']); ?>" alt="Hình ảnh bài hát" class="img-thumbnail" style="width: 50px; height: auto;"></td>
                             <td><?php echo htmlspecialchars($song['slug']); ?></td>
+                            <td style="background-color: <?php echo htmlspecialchars($song['color']); ?>; width: 50px;"></td>
                             <td>
                                 <a href="../<?php echo htmlspecialchars($song['slug']); ?>" target="_blank">Xem trang</a>
                             </td>
                             <td>
-                                <a href="fix.php?id=<?php echo $song['id']; ?>">Sửa</a>
+                                <a href="fix.php?id=<?php echo $song['id']; ?>" class="btn btn-warning btn-sm">Sửa</a>
                             </td>
                         </tr>
                     <?php } ?>
                 </tbody>
             </table>
-            <input type="submit" name="delete_songs" value="Xóa các bài hát đã chọn">
+            <button type="submit" name="delete_songs" class="btn btn-danger">Xóa đã chọn</button>
         </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Chọn/ bỏ chọn tất cả các checkbox
-        document.getElementById('select_all').onclick = function() {
+        // Chọn tất cả checkbox
+        document.getElementById('select_all').addEventListener('click', function() {
             const checkboxes = document.querySelectorAll('input[name="selected_songs[]"]');
-            for (const checkbox of checkboxes) {
+            checkboxes.forEach(checkbox => {
                 checkbox.checked = this.checked;
-            }
-        };
+            });
+        });
     </script>
 </body>
 </html>
