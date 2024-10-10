@@ -244,7 +244,7 @@ $result = $conn->query($sql);
             <?php while ($row = $result->fetch_assoc()): ?>
                 <tr>
                     <td><input type="checkbox" name="selected_songs[]" value="<?= $row['id'] ?>"></td>
-                    <td><?= htmlspecialchars($row['title']) ?></td>
+                    <td><a href="../<?= htmlspecialchars($row['slug']) ?>"><?= htmlspecialchars($row['title']) ?></a></td>
                     <td><?= htmlspecialchars($row['spotify_link']) ?></td>
                     <td><?= htmlspecialchars($row['apple_link']) ?></td>
                     <td><?= htmlspecialchars($row['soundcloud_link']) ?></td>
