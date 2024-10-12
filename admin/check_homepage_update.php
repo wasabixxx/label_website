@@ -1,5 +1,5 @@
 <?php
-include 'connect_db.php';
+include '../connect_db.php';
 
 // Lấy thông tin hiện tại của bảng homepage (id = 1)
 $sql = "SELECT * FROM homepage WHERE id = 1";

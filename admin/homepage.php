@@ -22,11 +22,11 @@ function saveCurrentHomepageVersion($conn) {
 
     // Chèn phiên bản hiện tại vào bảng homepage_versions
     $sql = "INSERT INTO homepage_versions 
-        (homepage_id, title, spotify_link, apple_link, soundcloud_link, youtube_link, instagram_link, image, color) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        (homepage_id, title, spotify_link, apple_link, soundcloud_link, youtube_link, instagram_link, facebook_link, tiktok_link, zalo_link, image, color) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("issssssss", 
+    $stmt->bind_param("isssssssssss", 
         $current_homepage['id'], 
         $current_homepage['title'], 
         $current_homepage['spotify_link'], 
@@ -34,12 +34,14 @@ function saveCurrentHomepageVersion($conn) {
         $current_homepage['soundcloud_link'], 
         $current_homepage['youtube_link'], 
         $current_homepage['instagram_link'], 
+        $current_homepage['facebook_link'], // Thêm facebook_link
+        $current_homepage['tiktok_link'], // Thêm tiktok_link
+        $current_homepage['zalo_link'], // Thêm zalo_link
         $current_homepage['image'],
         $current_homepage['color'] // Thêm màu vào phiên bản
     );
     $stmt->execute();
 }
-
 // Lấy thông tin hiện tại của homepage
 $sql = "SELECT * FROM homepage WHERE id=1";
 $result = $conn->query($sql);
@@ -56,6 +58,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_homepage'])) {
     $home_soundcloud = $_POST['home_soundcloud'] ?? $current_homepage['soundcloud_link'];
     $home_youtube = $_POST['home_youtube'] ?? $current_homepage['youtube_link'];
     $home_instagram = $_POST['home_instagram'] ?? $current_homepage['instagram_link'];
+    $home_facebook = $_POST['home_facebook'] ?? $current_homepage['facebook_link']; // Nhận giá trị Facebook link
+    $home_tiktok = $_POST['home_tiktok'] ?? $current_homepage['tiktok_link'];       // Nhận giá trị TikTok link
+    $home_zalo = $_POST['home_zalo'] ?? $current_homepage['zalo_link'];             // Nhận giá trị Zalo link
     $home_color = $_POST['home_color'] ?? $current_homepage['color']; // Nhận giá trị màu
 
     $home_image = ""; // Khởi tạo biến hình ảnh
@@ -63,7 +68,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_homepage'])) {
     // Kiểm tra xem tệp hình ảnh có được tải lên hay không
     if (isset($_FILES['home_image']) && $_FILES['home_image']['error'] == 0) {
         $home_image = $_FILES['home_image']['name']; // Lấy tên file hình ảnh
-        $target_dir = "uploads1/"; // Đường dẫn đến thư mục lưu ảnh
+        $target_dir = "../uploads1/"; // Đường dẫn đến thư mục lưu ảnh
         $target_file = $target_dir . basename($home_image);
 
         // Kiểm tra loại tệp và kích thước nếu cần
@@ -81,13 +86,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_homepage'])) {
                             soundcloud_link=?, 
                             youtube_link=?, 
                             instagram_link=?, 
+                            facebook_link=?, 
+                            tiktok_link=?, 
+                            zalo_link=?, 
                             image=?, 
                             color=? 
                         WHERE id=1";
 
                 // Sử dụng prepared statements để bảo mật
                 $stmt = $conn->prepare($sql);
-                $stmt->bind_param("ssssssss", $home_title, $home_spotify, $home_apple, $home_soundcloud, $home_youtube, $home_instagram, $home_image, $home_color);
+                $stmt->bind_param("sssssssssss", 
+                    $home_title, 
+                    $home_spotify, 
+                    $home_apple, 
+                    $home_soundcloud, 
+                    $home_youtube, 
+                    $home_instagram, 
+                    $home_facebook, 
+                    $home_tiktok, 
+                    $home_zalo, 
+                    $home_image, 
+                    $home_color
+                );
 
                 if ($stmt->execute()) {
                     echo "<div class='alert alert-success'>Trang chủ đã được cập nhật!</div>";
@@ -109,12 +129,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_homepage'])) {
                     soundcloud_link=?, 
                     youtube_link=?, 
                     instagram_link=?, 
+                    facebook_link=?, 
+                    tiktok_link=?, 
+                    zalo_link=?, 
                     color=? 
                 WHERE id=1";
 
         // Sử dụng prepared statements để bảo mật
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssss", $home_title, $home_spotify, $home_apple, $home_soundcloud, $home_youtube, $home_instagram, $home_color);
+        $stmt->bind_param("ssssssssss", 
+            $home_title, 
+            $home_spotify, 
+            $home_apple, 
+            $home_soundcloud, 
+            $home_youtube, 
+            $home_instagram, 
+            $home_facebook, 
+            $home_tiktok, 
+            $home_zalo, 
+            $home_color
+        );
 
         if ($stmt->execute()) {
             echo "<div class='alert alert-success'>Trang chủ đã được cập nhật mà không thay đổi hình ảnh!</div>";
@@ -136,17 +170,32 @@ if (isset($_GET['version_id'])) {
     $version = $stmt->get_result()->fetch_assoc();
     
     // Khôi phục phiên bản về bảng homepage
-    $sql = "UPDATE homepage SET title=?, spotify_link=?, apple_link=?, soundcloud_link=?, youtube_link=?, instagram_link=?, image=?, color=? WHERE id = 1";
+    $sql = "UPDATE homepage SET 
+                title=?, 
+                spotify_link=?, 
+                apple_link=?, 
+                soundcloud_link=?, 
+                youtube_link=?, 
+                instagram_link=?, 
+                facebook_link=?, 
+                tiktok_link=?, 
+                zalo_link=?, 
+                image=?, 
+                color=? 
+            WHERE id = 1";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssssss", 
+    $stmt->bind_param("sssssssssss", 
         $version['title'], 
         $version['spotify_link'], 
         $version['apple_link'], 
         $version['soundcloud_link'], 
         $version['youtube_link'], 
         $version['instagram_link'], 
-        $version['image'],
-        $version['color'] // Khôi phục giá trị màu
+        $version['facebook_link'], // Khôi phục giá trị Facebook link
+        $version['tiktok_link'],   // Khôi phục giá trị TikTok link
+        $version['zalo_link'],     // Khôi phục giá trị Zalo link
+        $version['image'], 
+        $version['color']
     );
     if ($stmt->execute()) {
         echo "<div class='alert alert-success'>Đã khôi phục phiên bản từ " . $version['version_date'] . "</div>";
@@ -170,7 +219,7 @@ if (isset($_POST['delete_versions'])) {
 if (isset($_POST['delete_images'])) {
     if (!empty($_POST['image_names'])) {
         foreach ($_POST['image_names'] as $image_name) {
-            $file_path = "uploads1/" . $image_name;
+            $file_path = "../uploads1/" . $image_name;
             if (file_exists($file_path)) {
                 unlink($file_path); // Xóa tệp
             }
@@ -183,116 +232,185 @@ if (isset($_POST['delete_images'])) {
 $sql = "SELECT * FROM homepage_versions WHERE homepage_id = 1 ORDER BY version_date DESC";
 $result_versions = $conn->query($sql);
 
-// Lấy danh sách ảnh trong thư mục uploads1
-$images = array_diff(scandir('uploads1'), array('..', '.'));
+// Lấy danh sách ảnh trong thư mục ../uploads1
+$images = array_diff(scandir('../uploads1'), array('..', '.'));
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cập nhật trang chủ</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Thêm một số CSS tùy chỉnh nếu cần */
+        .form-section {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .current-image {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 15px;
+        }
+        .version-image {
+            max-width: 100px;
+            height: auto;
+        }
+        .image-list img {
+            max-width: 100px;
+            height: auto;
+        }
+        .image-list {
+        width: 100px; /* Đặt kích thước cố định cho ảnh */
+        height: auto; /* Đảm bảo tỷ lệ ảnh không bị bóp méo */
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <a href="../admin" class="btn btn-danger">Quay về trang ADMIN</a>
-                    </div>
-                </div>
         <div class="row">
-            <!-- Phần bên trái: Form cập nhật -->
+            <!-- Bên trái: Form cập nhật -->
             <div class="col-md-6">
-                <h2>Cập nhật trang chủ</h2>
-                <form action="homepage.php" method="post" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="home_title">Tiêu đề:</label>
-                        <input type="text" class="form-control" name="home_title" value="<?= $current_homepage['title'] ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="home_spotify">Link Spotify:</label>
-                        <input type="text" class="form-control" name="home_spotify" value="<?= $current_homepage['spotify_link'] ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="home_apple">Link Apple Music:</label>
-                        <input type="text" class="form-control" name="home_apple" value="<?= $current_homepage['apple_link'] ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="home_soundcloud">Link SoundCloud:</label>
-                        <input type="text" class="form-control" name="home_soundcloud" value="<?= $current_homepage['soundcloud_link'] ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="home_youtube">Link YouTube:</label>
-                        <input type="text" class="form-control" name="home_youtube" value="<?= $current_homepage['youtube_link'] ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="home_instagram">Link Instagram:</label>
-                        <input type="text" class="form-control" name="home_instagram" value="<?= $current_homepage['instagram_link'] ?>">
-                    </div>
-                    <div class="form-group">
-                        <label for="home_image">Hình ảnh:</label>
-                        <input type="file" class="form-control-file" name="home_image">
-                    </div>
-                    <div class="form-group">
-                        <label for="home_color">Màu sắc:</label>
-                        <input type="color" class="form-control" name="home_color" value="<?= $current_homepage['color'] ?>">
-                    </div>
-                    <button type="submit" name="update_homepage" class="btn btn-primary">Cập nhật</button>
-                </form>
+                <div class="form-section">
+                    <h2>Cập nhật trang chủ</h2>
+                    <form action="homepage.php" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="home_title">Tiêu đề:</label>
+                            <input type="text" class="form-control" name="home_title" value="<?= htmlspecialchars($current_homepage['title']) ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="home_spotify">Link Spotify:</label>
+                            <input type="text" class="form-control" name="home_spotify" value="<?= htmlspecialchars($current_homepage['spotify_link']) ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="home_apple">Link Apple Music:</label>
+                            <input type="text" class="form-control" name="home_apple" value="<?= htmlspecialchars($current_homepage['apple_link']) ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="home_soundcloud">Link SoundCloud:</label>
+                            <input type="text" class="form-control" name="home_soundcloud" value="<?= htmlspecialchars($current_homepage['soundcloud_link']) ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="home_youtube">Link YouTube:</label>
+                            <input type="text" class="form-control" name="home_youtube" value="<?= htmlspecialchars($current_homepage['youtube_link']) ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="home_instagram">Link Instagram:</label>
+                            <input type="text" class="form-control" name="home_instagram" value="<?= htmlspecialchars($current_homepage['instagram_link']) ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="home_facebook">Link Facebook:</label>
+                            <input type="text" class="form-control" name="home_facebook" value="<?= htmlspecialchars($current_homepage['facebook_link']) ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="home_tiktok">Link TikTok:</label>
+                            <input type="text" class="form-control" name="home_tiktok" value="<?= htmlspecialchars($current_homepage['tiktok_link']) ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="home_zalo">Link Zalo:</label>
+                            <input type="text" class="form-control" name="home_zalo" value="<?= htmlspecialchars($current_homepage['zalo_link']) ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="home_color">Màu sắc:</label>
+                            <input type="color" class="form-control" name="home_color" value="<?= htmlspecialchars($current_homepage['color']) ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="home_image">Hình ảnh:</label>
+                            <input type="file" class="form-control-file" name="home_image">
+                        </div>
+                        <button type="submit" name="update_homepage" class="btn btn-primary">Cập nhật</button>
+                    </form>
+                </div>
             </div>
 
-            <!-- Phần bên phải: Hình ảnh hiện tại -->
+            <!-- Bên phải: Hình ảnh hiện tại và các phiên bản -->
             <div class="col-md-6">
-                <h3 class="mt-5">Hình ảnh hiện tại:</h3>
-                <img src="uploads1/<?= $current_homepage['image'] ?>" alt="Current Homepage Image" class="img-fluid" />
+                <div class="form-section">
+                    <h2>Hình ảnh hiện tại:</h2>
+                    <?php if (!empty($current_homepage['image'])) : ?>
+                        <img src="../uploads1/<?= htmlspecialchars($current_homepage['image']) ?>" alt="Current Homepage Image" class="img-fluid current-image">
+                    <?php else: ?>
+                        <p>Không có hình ảnh hiện tại.</p>
+                    <?php endif; ?>
 
-                <h3 class="mt-5">Danh sách hình ảnh trong uploads1:</h3>
-                <form action="homepage.php" method="post">
-                    <div class="form-group">
-                        <?php foreach ($images as $image): ?>
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" name="image_names[]" value="<?= $image ?>" id="<?= $image ?>">
-                                <label class="form-check-label" for="<?= $image ?>"><?= $image ?></label>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
-                    <button type="submit" name="delete_images" class="btn btn-danger">Xóa các ảnh đã chọn</button>
-                </form>
-
-                <h3 class="mt-5">Danh sách phiên bản cũ:</h3>
-                <form action="homepage.php" method="post">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Chọn</th>
-                                <th>Tiêu đề</th>
-                                <th>Ngày phiên bản</th>
-                                <th>Hình ảnh</th>
-                                <th>Khôi phục</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php while ($version = $result_versions->fetch_assoc()): ?>
+                    <h3 class="mt-4">Danh sách phiên bản cũ:</h3>
+                    <form action="homepage.php" method="post">
+                        <table class="table table-bordered">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        <input type="checkbox" name="version_ids[]" value="<?= $version['id'] ?>">
-                                    </td>
-                                    <td><?= $version['title'] ?></td>
-                                    <td><?= $version['version_date'] ?></td>
-                                    <td><img src="uploads1/<?= $version['image'] ?>" alt="Version Image" class="img-thumbnail" width="100"></td>
-                                    <td>
-                                        <a href="homepage.php?version_id=<?= $version['id'] ?>" class="btn btn-warning">Khôi phục</a>
-                                    </td>
+                                    <th>Chọn</th>
+                                    <th>Tiêu đề</th>
+                                    <th>Ngày phiên bản</th>
+                                    <th>Hình ảnh</th>
+                                    <th>Khôi phục</th>
                                 </tr>
-                            <?php endwhile; ?>
-                        </tbody>
-                    </table>
-                    <button type="submit" name="delete_versions" class="btn btn-danger">Xóa các phiên bản đã chọn</button>
-                </form>
+                            </thead>
+                            <tbody>
+                                <?php while ($version = $result_versions->fetch_assoc()) : ?>
+                                    <tr>
+                                        <td>
+                                            <input type="checkbox" name="version_ids[]" value="<?= htmlspecialchars($version['id']) ?>">
+                                        </td>
+                                        <td><?= htmlspecialchars($version['title']) ?></td>
+                                        <td><?= htmlspecialchars($version['version_date']) ?></td>
+                                        <td>
+                                            <?php if (!empty($version['image'])): ?>
+                                                <img src="../uploads1/<?= htmlspecialchars($version['image']) ?>" alt="Version Image" class="version-image">
+                                            <?php else: ?>
+                                                N/A
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <a href="homepage.php?version_id=<?= htmlspecialchars($version['id']) ?>" class="btn btn-warning btn-sm">Khôi phục</a>
+                                        </td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            </tbody>
+                        </table>
+                        <button type="submit" name="delete_versions" class="btn btn-danger">Xóa các phiên bản đã chọn</button>
+                    </form>
+                </div>
             </div>
         </div>
+
+       <!-- Danh sách ảnh trong ../uploads1 -->
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="form-section">
+            <h2>Danh sách ảnh trong ../uploads1:</h2>
+            <form method="POST">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Chọn</th>
+                            <th>Tên ảnh</th>
+                            <th>Xem trước</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($images as $image) : ?>
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name="image_names[]" value="<?= htmlspecialchars($image) ?>">
+                                </td>
+                                <td><?= htmlspecialchars($image) ?></td>
+                                <td>
+                                    <img src="../uploads1/<?= htmlspecialchars($image) ?>" alt="Image" class="img-thumbnail image-list">
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <button type="submit" name="delete_images" class="btn btn-danger">Xóa các ảnh đã chọn</button>
+            </form>
+        </div>
+    </div>
+</div>
+
     </div>
 </body>
 </html>

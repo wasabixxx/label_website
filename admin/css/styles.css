@@ -1,0 +1,15 @@
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden; /* Ngăn cuộn */
+}
+.iframe-container {
+    height: calc(100vh - 0px); /* Chiếm toàn bộ chiều cao */
+}
+.sidebar-color{
+    background-color: rgb(122, 39, 0);
+}
+.sidebar-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
