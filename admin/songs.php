@@ -234,55 +234,53 @@ $result = $conn->query($sql);
             <button type="submit" name="new_page" class="btn btn-primary mb-2">Thêm bài hát</button>
         </form>
     </div>
-    <h1 class="text-2xl font-bold">Danh sách bài hát</h1>
-    <form method="post" class="mt-4">
-        <table class="table table-bordered">
-            <thead class="bg-light">
+    <h1 class="text-2xl font-bold mb-4">Danh sách bài hát</h1>
+<form method="post" class="mt-4">
+    <table class="table table-bordered table-sm" style="width: 80%; margin: 0 auto;">
+        <thead class="bg-light">
+            <tr>
+                <th><input type="checkbox" id="select_all"></th>
+                <th>Tiêu đề</th>
+                <th>Slug</th>
+                <th>Màu</th>
+                <th>Link Spotify</th>
+                <th>Link Apple</th>
+                <th>Link SoundCloud</th>
+                <th>Link YouTube</th>
+                <th>Link Instagram</th>
+                <th>Link Facebook</th>
+                <th>Link TikTok</th>
+                <th>Link Zalo</th>
+                <th style="width: 50px;">Hình ảnh</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php while ($row = $result->fetch_assoc()): ?>
                 <tr>
-                    <th><input type="checkbox" id="select_all"></th>
-                    <th>ID</th>
-                    <th>Tiêu đề</th>
-                    <th>Slug</th>
-                    <th>Màu</th>
-                    <th>Link Spotify</th>
-                    <th>Link Apple</th>
-                    <th>Link SoundCloud</th>
-                    <th>Link YouTube</th>
-                    <th>Link Instagram</th>
-                    <th>Link Facebook</th>
-                    <th>Link TikTok</th>
-                    <th>Link Zalo</th>
-                    <th>Hình ảnh</th>
-                    <th>Hành động</th>
+                    <td><input type="checkbox" name="selected_songs[]" value="<?php echo $row['id']; ?>"></td>
+                    <td><a href="../<?php echo $row['slug']; ?>" target="_blank" rel="noopener noreferrer"><?php echo $row['title']; ?></a></td>
+                    <td><?php echo $row['slug']; ?></td>
+                    <td style="background-color: <?php echo $row['color']; ?>;"><?php echo $row['color']; ?></td>
+                    <td><?php echo $row['spotify_link']; ?></td>
+                    <td><?php echo $row['apple_link']; ?></td>
+                    <td><?php echo $row['soundcloud_link']; ?></td>
+                    <td><?php echo $row['youtube_link']; ?></td>
+                    <td><?php echo $row['instagram_link']; ?></td>
+                    <td><?php echo $row['facebook_link']; ?></td>
+                    <td><?php echo $row['tiktok_link']; ?></td>
+                    <td><?php echo $row['zalo_link']; ?></td>
+                    <td><img src="../uploads/<?php echo $row['image']; ?>" alt="<?php echo $row['title']; ?>" width="50" class="rounded"></td>
+                    <td>
+                        <button type="button" class="btn btn-info edit-btn" data-id="<?php echo $row['id']; ?>" data-title="<?php echo $row['title']; ?>" data-spotify="<?php echo $row['spotify_link']; ?>" data-apple="<?php echo $row['apple_link']; ?>" data-soundcloud="<?php echo $row['soundcloud_link']; ?>" data-youtube="<?php echo $row['youtube_link']; ?>" data-instagram="<?php echo $row['instagram_link']; ?>" data-facebook="<?php echo $row['facebook_link']; ?>" data-tiktok="<?php echo $row['tiktok_link']; ?>" data-zalo="<?php echo $row['zalo_link']; ?>" data-slug="<?php echo $row['slug']; ?>" data-color="<?php echo $row['color']; ?>">Sửa</button>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                <?php while ($row = $result->fetch_assoc()): ?>
-                    <tr>
-                        <td><input type="checkbox" name="selected_songs[]" value="<?php echo $row['id']; ?>"></td>
-                        <td><?php echo $row['id']; ?></td>
-                        <td><a href="../<?php echo $row['slug']; ?>" target="_blank" rel="noopener noreferrer"><?php echo $row['title']; ?></a></td>
-                        <td><?php echo $row['slug']; ?></td>
-                        <td style="background-color: <?php echo $row['color']; ?>;"><?php echo $row['color']; ?></td>
-                        <td><?php echo $row['spotify_link']; ?></td>
-                        <td><?php echo $row['apple_link']; ?></td>
-                        <td><?php echo $row['soundcloud_link']; ?></td>
-                        <td><?php echo $row['youtube_link']; ?></td>
-                        <td><?php echo $row['instagram_link']; ?></td>
-                        <td><?php echo $row['facebook_link']; ?></td>
-                        <td><?php echo $row['tiktok_link']; ?></td>
-                        <td><?php echo $row['zalo_link']; ?></td>
-                        <td><img src="../uploads/<?php echo $row['image']; ?>" alt="<?php echo $row['title']; ?>" width="100" class="rounded"></td>
-                        <td>
-                            <button type="button" class="btn btn-info edit-btn" data-id="<?php echo $row['id']; ?>" data-title="<?php echo $row['title']; ?>" data-spotify="<?php echo $row['spotify_link']; ?>" data-apple="<?php echo $row['apple_link']; ?>" data-soundcloud="<?php echo $row['soundcloud_link']; ?>" data-youtube="<?php echo $row['youtube_link']; ?>" data-instagram="<?php echo $row['instagram_link']; ?>" data-facebook="<?php echo $row['facebook_link']; ?>" data-tiktok="<?php echo $row['tiktok_link']; ?>" data-zalo="<?php echo $row['zalo_link']; ?>" data-slug="<?php echo $row['slug']; ?>" data-color="<?php echo $row['color']; ?>">Sửa</button>
-                        </td>
-                    </tr>
-                <?php endwhile; ?>
-            </tbody>
-        </table>
-        <button type="submit" name="delete_songs" class="btn btn-danger">Xóa bài hát đã chọn</button>
-    </form>
-</div>
+            <?php endwhile; ?>
+        </tbody>
+    </table>
+    <button type="submit" name="delete_songs" class="btn btn-danger">Xóa bài hát đã chọn</button>
+</form>
+
 
 <!-- Modal chỉnh sửa bài hát -->
 <div class="modal" id="editSongModal">

@@ -22,7 +22,6 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'dashboard';
 // Thêm kiểm tra cho tên người dùng
 $username = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username']) : 'Khách';
 $role = isset($_SESSION['role']) ? htmlspecialchars($_SESSION['role']) : 'Khách';
-
 ?>
 
 <!DOCTYPE html>
@@ -32,14 +31,14 @@ $role = isset($_SESSION['role']) ? htmlspecialchars($_SESSION['role']) : 'Khách
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- <link rel="stylesheet" href="css/style.css">  -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/style.css?v=<?php echo time(); ?>">
+    <link rel="shortcut icon" href="../img/123.ico" type="image/x-icon">
 </head>
 <body class="bg-gray-100">
-    <div class="flex h-full">
+    <div class="flex h-screen">
         <!-- Sidebar -->
-        <div class="sidebar-color w-64 h-screen p-4 shadow-lg">
+        <div id="sidebar" class="sidebar-color w-64 h-full p-4 shadow-lg transition-transform duration-300 transform -translate-x-full sm:translate-x-0">
             <div class="text-white text-2xl font-bold mb-6">Quản lý Admin</div>
             <div class="bg-white p-4 rounded-lg mb-4">
                 <div class="text-teal-700 font-bold mb-1">Xin chào, <?php echo $username; ?></div>
@@ -83,6 +82,12 @@ $role = isset($_SESSION['role']) ? htmlspecialchars($_SESSION['role']) : 'Khách
         </div>
         <!-- Main Content -->
         <div class="flex-1 p-0">
+            <div class="flex justify-between p-4 bg-white shadow">
+                <button id="toggleSidebar" class="text-gray-700 md:hidden">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="text-2xl font-bold">Trang Quản Trị</h1>
+            </div>
             <div class="iframe-container">
                 <iframe src="<?php 
                     if ($page === 'songs') {
@@ -95,9 +100,17 @@ $role = isset($_SESSION['role']) ? htmlspecialchars($_SESSION['role']) : 'Khách
                         echo 'dashboard.php'; // Trang mặc định
                     }
                 ?>" 
-                class="w-full h-full border-0" frameborder="0"></iframe>
+                class="w-full h-[calc(100vh-64px)] border-0" frameborder="0"></iframe>
             </div>
         </div>
     </div>
+
+    <script>
+        // Toggle sidebar
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            var sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('-translate-x-full');
+        });
+    </script>
 </body>
 </html>
