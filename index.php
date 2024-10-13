@@ -68,6 +68,34 @@ if (isset($_GET['slug'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="facebook-domain-verification" content="42wjac8c0k25qu1kysxglupna7bos6" />
+    <!-- Thẻ meta description để mô tả nội dung của trang web -->
+    <meta name="description" content="BSA - Brothers Still Alive là một tổ chức âm nhạc với chuyên môn chính là làm nhạc và phát hành sản phẩm chuyên về hiphop">
+    <!-- Thẻ meta keywords cho từ khóa liên quan đến nội dung (ít còn sử dụng nhưng có thể thêm) -->
+    <meta name="keywords" content="music, bsa, rap, hiphop">
+
+    <!-- Thẻ meta robots điều khiển cách mà công cụ tìm kiếm lập chỉ mục trang web -->
+    <meta name="robots" content="index, follow">
+
+    <!-- Thẻ canonical để chỉ định URL chính thống của trang web, tránh nội dung trùng lặp -->
+    <link rel="canonical" href="https://www.brothersstillalive.asia/" />
+
+    <!-- Thẻ meta cho Open Graph (OG) - chia sẻ trên mạng xã hội -->
+    <meta property="og:title" content="<?php echo htmlspecialchars($title); ?>">
+    <meta property="og:description" content="BSA - <?php echo htmlspecialchars($title); ?>">
+    <meta property="og:image" content="https://www.brothersstillalive.asia/img/Untitled.png">
+    <meta property="og:url" content="https://www.brothersstillalive.asia">
+    <meta property="og:type" content="website">
+
+    <!-- Thẻ meta để chỉ định tác giả của trang -->
+    <meta name="author" content="Nguyễn Ngọc Khánh">
+
+    <!-- Thẻ meta để xác định chủ đề nội dung của trang web (optional) -->
+    <meta name="subject" content="Music fan link website">
+
+    <!-- Thẻ meta cho xác định khu vực địa lý hoặc ngôn ngữ (optional) -->
+    <meta name="geo.region" content="VN">
+    <meta name="language" content="Vietnamese">
+
     <title><?php echo htmlspecialchars($title); ?> - Brothers Still Alive</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
