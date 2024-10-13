@@ -67,6 +67,7 @@ if (isset($_GET['slug'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="facebook-domain-verification" content="42wjac8c0k25qu1kysxglupna7bos6" />
     <title><?php echo htmlspecialchars($title); ?> - Brothers Still Alive</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
@@ -74,10 +75,17 @@ if (isset($_GET['slug'])) {
     <link rel="shortcut icon" href="img/123.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .background-blur {
+    * {
+    user-select: none;
+    -webkit-user-select: none;/*IE,etc*/
+    -moz-user-select: none; /*Mozzila Firefox*/
+    -ms-user-select: none;
+    }
+    .background-blur {
         background-image: url("<?php echo $uploads_path . htmlspecialchars($image); ?>");
+        background-color: black;
         background-size: cover;
-        filter: blur(15px);
+        filter: blur(15px) brightness(0.8);
         position: absolute;
         top: 0;
         left: 0;
@@ -86,15 +94,47 @@ if (isset($_GET['slug'])) {
         z-index: -1;
     }
 
-    </style>
+    /* Media query cho màn hình nhỏ hơn 768px (thiết bị di động) */
+    @media (max-width: 768px) {
+        .background-blur {
+            background-image: none; /* Loại bỏ background-image */
+            filter: blur(0px);
+            background-color: white;
+        }
+        footer a,p{
+            color: black;
+        }
+        footer div a {
+            text-decoration: none;
+            color: black;
+        }
+
+    }
+</style>
 </head>
-<body class="relative flex flex-col items-center justify-center min-h-screen">
+<body class="relative flex flex-col items-center justify-center min-h-screen" id="body-disable-rc">
     <div class="bg-blurred"></div>
     <div class="background-blur"></div>
-    <div class="flex flex-col items-center relative z-10 mb-2 mt-14">
-        <img alt="Album cover" class="w-64 h-64 rounded-lg mb-1" height="128" src="<?php echo $uploads_path . htmlspecialchars($image); ?>" width="128"/>
-        <h1 class="text-3xl font-bold" style="color: <?php echo htmlspecialchars($color); ?>;"><?php echo htmlspecialchars($title); ?></h1>
-        <p class="text-500 mb-2">Choose music service</p>
+    <div class="flex flex-col items-center relative z-10 mb-4 mt-14 text-center">
+        <img 
+            alt="Album cover" 
+            class="w-64 h-full rounded-lg mb-1 drop-shadow-xl" 
+            src="<?php echo $uploads_path . htmlspecialchars($image); ?>" 
+        />
+        <h1 
+            class="text-3xl font-bold break-words" 
+            style="color: <?php echo htmlspecialchars($color); ?>; max-width: 24rem;">
+            <?php echo htmlspecialchars($title); ?>
+        </h1>
+        <p class="text-500 mt-2 mb-0 cms" style="color: <?php echo htmlspecialchars($color); ?>;">
+            <?php 
+            if (!empty($slug)) {
+             echo "Choose music service";
+            }else {
+             echo "Contact us:";
+            }
+            ?>
+        </p>
     </div>
     <div class="bg-white shadow-md rounded-lg p-6 max-w-md w-full relative z-10 my-5">
         <div class="space-y-4">
@@ -122,7 +162,7 @@ if (isset($_GET['slug'])) {
             <?php if (!empty($youtube_link)): ?>
             <div class="flex items-center justify-between bg-gray-100 p-4 rounded-lg">
                 <img alt="YouTube Music logo" class="w-6 h-6" height="24" src="https://upload.wikimedia.org/wikipedia/commons/f/fc/YouTube_play_button_square_%282013-2017%29.svg" width="24"/>
-                <span class="text-lg font-medium">YouTube Music</span>
+                <span class="text-lg font-medium">YouTube</span>
                 <a href="<?php echo htmlspecialchars($youtube_link); ?>" class="bg-blue-500 text-white px-4 py-2 rounded-lg" target="_blank">Play</a>
             </div>
             <?php endif; ?>
@@ -171,5 +211,10 @@ if (isset($_GET['slug'])) {
             <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://www.facebook.com/BSAdagang" target="_blank">Brothers Still Alive</a></p>
         </div>
     </footer>
+
+    <script>
+        const element = document.getElementById("body-disable-rc"); 
+        element.addEventListener("contextmenu", (event) => { event.preventDefault(); });
+    </script>
 </body>
 </html>

@@ -17,12 +17,13 @@ body {
  footer { 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-height: 20px;
-    color: rgb(191, 191, 191);
+    color: rgb(0, 0, 0);
  }
 
 footer div a {
     text-decoration: none;
-    color: #b1b1b1;
+    color: #ffffff;
+    font-weight: 200;
 }
 
 footer div {
