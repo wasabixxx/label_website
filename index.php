@@ -82,7 +82,7 @@ if (isset($_GET['slug'])) {
     <!-- Thẻ meta cho Open Graph (OG) - chia sẻ trên mạng xã hội -->
     <meta property="og:title" content="<?php echo htmlspecialchars($title); ?>">
     <meta property="og:description" content="BSA - <?php echo htmlspecialchars($title); ?>">
-    <meta property="og:image" content="https://www.brothersstillalive.asia/img/Untitled.png">
+    <meta property="og:image" content="https://www.brothersstillalive.asia/<?php echo $uploads_path . htmlspecialchars($image); ?>">
     <meta property="og:url" content="https://www.brothersstillalive.asia">
     <meta property="og:type" content="website">
 
@@ -101,7 +101,7 @@ if (isset($_GET['slug'])) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
     <link rel="shortcut icon" href="img/123.ico" type="image/x-icon">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=<?php echo time(); ?>">
     <style>
     * {
     user-select: none;
@@ -121,6 +121,10 @@ if (isset($_GET['slug'])) {
         bottom: 0;
         z-index: -1;
     }
+    .main-header h1,p {
+        color: <?php echo htmlspecialchars($color); ?>;
+        max-width: 24rem;
+    }
 
     /* Media query cho màn hình nhỏ hơn 768px (thiết bị di động) */
     @media (max-width: 768px) {
@@ -135,6 +139,13 @@ if (isset($_GET['slug'])) {
         footer div a {
             text-decoration: none;
             color: black;
+            font-weight: 500;
+        }
+        .main-header h1 {
+            color: #121212;
+        }
+        .main-header h1,p {
+            color: #121212 !important;
         }
 
     }
@@ -143,18 +154,17 @@ if (isset($_GET['slug'])) {
 <body class="relative flex flex-col items-center justify-center min-h-screen" id="body-disable-rc">
     <div class="bg-blurred"></div>
     <div class="background-blur"></div>
-    <div class="flex flex-col items-center relative z-10 mb-4 mt-14 text-center">
+    <div class="flex flex-col items-center relative z-10 mb-4 mt-14 text-center main-header">
         <img 
             alt="Album cover" 
             class="w-64 h-full rounded-lg mb-1 drop-shadow-xl" 
             src="<?php echo $uploads_path . htmlspecialchars($image); ?>" 
         />
-        <h1 
-            class="text-3xl font-bold break-words" 
-            style="color: <?php echo htmlspecialchars($color); ?>; max-width: 24rem;">
-            <?php echo htmlspecialchars($title); ?>
+        <h1 class="text-3xl font-bold break-words">
+            <?php echo nl2br(htmlspecialchars($title)); ?>
         </h1>
-        <p class="text-500 mt-2 mb-0 cms" style="color: <?php echo htmlspecialchars($color); ?>;">
+
+        <p class="text-500 mt-2 mb-0 cms" style="color: <?php echo htmlspecialchars($color); ?>; ">
             <?php 
             if (!empty($slug)) {
              echo "Choose music service";

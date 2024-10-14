@@ -178,6 +178,18 @@ $result = $conn->query($sql);
     <title>Danh sách bài hát</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        table {
+            table-layout: fixed; /* Để bảng có chiều rộng cố định */
+            width: 100%; /* Chiều rộng 100% */
+        }
+
+        td {
+            word-wrap: break-word; /* Cắt từ khi cần thiết */
+            overflow: hidden; /* Ẩn nội dung tràn */
+            text-overflow: ellipsis; /* Hiển thị dấu ba chấm nếu nội dung bị cắt */
+        }
+    </style>
 </head>
 <body class="bg-gray-100">
 <div class="container mt-5 bg-white p-5 rounded shadow">
@@ -185,14 +197,14 @@ $result = $conn->query($sql);
         <form method="post" enctype="multipart/form-data" class="flex flex-wrap">
             <div class="form-row mb-2">
                 <div class="col">
-                    <input type="text" name="title" class="form-control" placeholder="Tiêu đề">
+                 <textarea name="title" class="form-control" placeholder="Tiêu đề" rows="1"></textarea>
                 </div>
                 <div class="col">
                     <input type="text" name="slug" class="form-control" placeholder="Slug">
                 </div>
             </div>
             <div class="form-row mb-2">
-                <div class="col">
+                <div class="col">   
                     <input type="color" name="color" class="form-control" title="Chọn màu">
                 </div>
                 <div class="col">
@@ -234,50 +246,50 @@ $result = $conn->query($sql);
             <button type="submit" name="new_page" class="btn btn-primary mb-2">Thêm bài hát</button>
         </form>
     </div>
-    <h1 class="text-2xl font-bold mb-4">Danh sách bài hát</h1>
+<h1 class="text-2xl font-bold mb-4">Danh sách bài hát</h1>
 <form method="post" class="mt-4">
-    <table class="table table-bordered table-sm" style="width: 80%; margin: 0 auto;">
-        <thead class="bg-light">
-            <tr>
-                <th><input type="checkbox" id="select_all"></th>
-                <th>Tiêu đề</th>
-                <th>Slug</th>
-                <th>Màu</th>
-                <th>Link Spotify</th>
-                <th>Link Apple</th>
-                <th>Link SoundCloud</th>
-                <th>Link YouTube</th>
-                <th>Link Instagram</th>
-                <th>Link Facebook</th>
-                <th>Link TikTok</th>
-                <th>Link Zalo</th>
-                <th style="width: 50px;">Hình ảnh</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php while ($row = $result->fetch_assoc()): ?>
+        <table class="table table-bordered table-sm" style="max-width: 100%; margin: 0 auto; table-layout: fixed;">
+            <thead class="bg-light">
                 <tr>
-                    <td><input type="checkbox" name="selected_songs[]" value="<?php echo $row['id']; ?>"></td>
-                    <td><a href="../<?php echo $row['slug']; ?>" target="_blank" rel="noopener noreferrer"><?php echo $row['title']; ?></a></td>
-                    <td><?php echo $row['slug']; ?></td>
-                    <td style="background-color: <?php echo $row['color']; ?>;"><?php echo $row['color']; ?></td>
-                    <td><?php echo $row['spotify_link']; ?></td>
-                    <td><?php echo $row['apple_link']; ?></td>
-                    <td><?php echo $row['soundcloud_link']; ?></td>
-                    <td><?php echo $row['youtube_link']; ?></td>
-                    <td><?php echo $row['instagram_link']; ?></td>
-                    <td><?php echo $row['facebook_link']; ?></td>
-                    <td><?php echo $row['tiktok_link']; ?></td>
-                    <td><?php echo $row['zalo_link']; ?></td>
-                    <td><img src="../uploads/<?php echo $row['image']; ?>" alt="<?php echo $row['title']; ?>" width="50" class="rounded"></td>
-                    <td>
-                        <button type="button" class="btn btn-info edit-btn" data-id="<?php echo $row['id']; ?>" data-title="<?php echo $row['title']; ?>" data-spotify="<?php echo $row['spotify_link']; ?>" data-apple="<?php echo $row['apple_link']; ?>" data-soundcloud="<?php echo $row['soundcloud_link']; ?>" data-youtube="<?php echo $row['youtube_link']; ?>" data-instagram="<?php echo $row['instagram_link']; ?>" data-facebook="<?php echo $row['facebook_link']; ?>" data-tiktok="<?php echo $row['tiktok_link']; ?>" data-zalo="<?php echo $row['zalo_link']; ?>" data-slug="<?php echo $row['slug']; ?>" data-color="<?php echo $row['color']; ?>">Sửa</button>
-                    </td>
+                    <th><input type="checkbox" id="select_all"></th>
+                    <th>Tiêu đề</th>
+                    <th>Slug</th>
+                    <th>Màu</th>
+                    <th>Link Spotify</th>
+                    <th>Link Apple</th>
+                    <th>Link SoundCloud</th>
+                    <th>Link YouTube</th>
+                    <th>Link Instagram</th>
+                    <th>Link Facebook</th>
+                    <th>Link TikTok</th>
+                    <th>Link Zalo</th>
+                    <th style="width: 50px;">Hình ảnh</th>
+                    <th>Hành động</th>
                 </tr>
-            <?php endwhile; ?>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                    <tr>
+                        <td><input type="checkbox" name="selected_songs[]" value="<?php echo $row['id']; ?>"></td>
+                        <td><a href="../<?php echo $row['slug']; ?>" target="_blank" rel="noopener noreferrer"><?php echo $row['title']; ?></a></td>
+                        <td><?php echo $row['slug']; ?></td>
+                        <td style="background-color: <?php echo $row['color']; ?>;"><?php echo $row['color']; ?></td>
+                        <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><?php echo $row['spotify_link']; ?></td>
+                        <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><?php echo $row['apple_link']; ?></td>
+                        <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><?php echo $row['soundcloud_link']; ?></td>
+                        <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><?php echo $row['youtube_link']; ?></td>
+                        <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><?php echo $row['instagram_link']; ?></td>
+                        <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><?php echo $row['facebook_link']; ?></td>
+                        <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><?php echo $row['tiktok_link']; ?></td>
+                        <td style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><?php echo $row['zalo_link']; ?></td>
+                        <td><img src="../uploads/<?php echo $row['image']; ?>" alt="<?php echo $row['title']; ?>" width="50" class="rounded"></td>
+                        <td>
+                            <button type="button" class="btn btn-info edit-btn" data-id="<?php echo $row['id']; ?>" data-title="<?php echo $row['title']; ?>" data-spotify="<?php echo $row['spotify_link']; ?>" data-apple="<?php echo $row['apple_link']; ?>" data-soundcloud="<?php echo $row['soundcloud_link']; ?>" data-youtube="<?php echo $row['youtube_link']; ?>" data-instagram="<?php echo $row['instagram_link']; ?>" data-facebook="<?php echo $row['facebook_link']; ?>" data-tiktok="<?php echo $row['tiktok_link']; ?>" data-zalo="<?php echo $row['zalo_link']; ?>" data-slug="<?php echo $row['slug']; ?>" data-color="<?php echo $row['color']; ?>">Sửa</button>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
     <button type="submit" name="delete_songs" class="btn btn-danger">Xóa bài hát đã chọn</button>
 </form>
 
@@ -295,8 +307,9 @@ $result = $conn->query($sql);
                     <input type="hidden" name="edit_song_id" id="edit_song_id">
                     <div class="form-group">
                         <label for="edit_title">Tiêu đề:</label>
-                        <input type="text" name="edit_title" id="edit_title" class="form-control">
+                        <textarea name="edit_title" id="edit_title" class="form-control" rows="3"></textarea>
                     </div>
+
                     <div class="form-group">
                         <label for="edit_slug">Slug:</label>
                         <input type="text" name="edit_slug" id="edit_slug" class="form-control">
