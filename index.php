@@ -60,8 +60,22 @@ if (isset($_GET['slug'])) {
         exit();
     }
 }
-?>
-
+?>  
+<!-- 
+    ,---,.   .--.--.      ,---,        
+  ,'  .'  \ /  /    '.   '  .' \       
+,---.' .' ||  :  /`. /  /  ;    '.     
+|   |  |: |;  |  |--`  :  :       \    
+:   :  :  /|  :  ;_    :  |   /\   \   
+:   |    ;  \  \    `. |  :  ' ;.   :  
+|   :     \  `----.   \|  |  ;/  \   \ 
+|   |   . |  __ \  \  |'  :  | \  \ ,' 
+'   :  '; | /  /`--'  /|  |  '  '--'   
+|   |  | ; '--'.     / |  :  :         
+|   :   /    `--'---'  |  | ,'         
+|   | ,'               `--''           
+`----'       
+                                    -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -96,7 +110,7 @@ if (isset($_GET['slug'])) {
     <meta name="geo.region" content="VN">
     <meta name="language" content="Vietnamese">
 
-    <title><?php echo htmlspecialchars($title); ?> - Brothers Still Alive</title>
+    <title><?php echo htmlspecialchars($title); ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
@@ -108,6 +122,10 @@ if (isset($_GET['slug'])) {
     -webkit-user-select: none;/*IE,etc*/
     -moz-user-select: none; /*Mozzila Firefox*/
     -ms-user-select: none;
+    }
+    body {
+        padding: 30px;
+        background-color: #121212;
     }
     .background-blur {
         background-image: url("<?php echo $uploads_path . htmlspecialchars($image); ?>");
@@ -125,15 +143,36 @@ if (isset($_GET['slug'])) {
         color: <?php echo htmlspecialchars($color); ?>;
         max-width: 24rem;
     }
+    
+    footer { 
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        min-height: 20px;
+        color: rgb(0, 0, 0);
+    }
+
+    footer div a {
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    footer div {
+        text-align: center;
+    }
+
+    footer div a:hover {
+        font-weight: 600;
+        color: #880000;
+    }
+
 
     /* Media query cho màn hình nhỏ hơn 768px (thiết bị di động) */
-    @media (max-width: 768px) {
-        .background-blur {
-            background-image: none; /* Loại bỏ background-image */
-            filter: blur(0px);
-            background-color: white;
-        }
-        footer a,p{
+    /* @media (max-width: 768px) { */
+        /* .background-blur { */
+            /* background-image: none; Loại bỏ background-image */ */
+            /* filter: blur(15px); */
+            /* background-color: black; */
+        /* } */
+        /* footer a,p{
             color: black;
         }
         footer div a {
@@ -146,21 +185,20 @@ if (isset($_GET['slug'])) {
         }
         .main-header h1,p {
             color: #121212 !important;
-        }
+        } */
 
-    }
+    /* } */
 </style>
 </head>
 <body class="relative flex flex-col items-center justify-center min-h-screen" id="body-disable-rc">
-    <div class="bg-blurred"></div>
     <div class="background-blur"></div>
     <div class="flex flex-col items-center relative z-10 mb-4 mt-14 text-center main-header">
         <img 
             alt="Album cover" 
-            class="w-64 h-full rounded-lg mb-1 drop-shadow-xl" 
+            class="w-56 h-full rounded-lg mb-1 drop-shadow-xl" 
             src="<?php echo $uploads_path . htmlspecialchars($image); ?>" 
         />
-        <h1 class="text-3xl font-bold break-words">
+        <h1 class="text-2xl font-bold break-words">
             <?php echo nl2br(htmlspecialchars($title)); ?>
         </h1>
 
@@ -246,7 +284,7 @@ if (isset($_GET['slug'])) {
     <footer>
         <div class="text-center py-4">
             <p class="text-gray-500">POWERED BY B$A</p>
-            <p>Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://www.facebook.com/BSAdagang" target="_blank">Brothers Still Alive</a></p>
+            <p class="text-white-500">Copyright &copy; <script>document.write(new Date().getFullYear())</script> <a href="https://www.facebook.com/BSAdagang" target="_blank">Brothers Still Alive</a></p>
         </div>
     </footer>
 
