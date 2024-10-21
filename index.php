@@ -148,11 +148,12 @@ if (isset($_GET['slug'])) {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         min-height: 20px;
         color: rgb(0, 0, 0);
+        font-size: medium;
     }
 
     footer div a {
         text-decoration: none;
-        font-weight: 500;
+        font-weight: 400;
     }
 
     footer div {
